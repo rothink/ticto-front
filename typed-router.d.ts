@@ -19,11 +19,12 @@ declare module 'vue-router/auto-routes' {
    */
   export interface RouteNamedMap {
     '/': RouteRecordInfo<'/', '/', Record<never, never>, Record<never, never>>,
-    '/change-password': RouteRecordInfo<'/change-password', '/change-password', Record<never, never>, Record<never, never>>,
-    '/employees': RouteRecordInfo<'/employees', '/employees', Record<never, never>, Record<never, never>>,
-    '/login': RouteRecordInfo<'/login', '/login', Record<never, never>, Record<never, never>>,
-    '/reports': RouteRecordInfo<'/reports', '/reports', Record<never, never>, Record<never, never>>,
-    '/time-records': RouteRecordInfo<'/time-records', '/time-records', Record<never, never>, Record<never, never>>,
-    '/timeclock': RouteRecordInfo<'/timeclock', '/timeclock', Record<never, never>, Record<never, never>>,
+    '/auth/change-password': RouteRecordInfo<'/auth/change-password', '/auth/change-password', Record<never, never>, Record<never, never>>,
+    '/auth/login': RouteRecordInfo<'/auth/login', '/auth/login', Record<never, never>, Record<never, never>>,
+    '/clock/time-records': RouteRecordInfo<'/clock/time-records', '/clock/time-records', Record<never, never>, Record<never, never>>,
+    '/clock/timeclock': RouteRecordInfo<'/clock/timeclock', '/clock/timeclock', Record<never, never>, Record<never, never>>,
+    '/employee/create': RouteRecordInfo<'/employee/create', '/employee/create', Record<never, never>, Record<never, never>>,
+    '/employee/employees': RouteRecordInfo<'/employee/employees', '/employee/employees', Record<never, never>, Record<never, never>>,
+    '/report/reports': RouteRecordInfo<'/report/reports', '/report/reports', Record<never, never>, Record<never, never>>,
   }
 }

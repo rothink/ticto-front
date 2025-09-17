@@ -5,11 +5,9 @@
         <v-card class="elevation-4" rounded="lg">
           <v-card-title class="pa-6">
             <v-icon size="32" color="purple" class="mr-3"
-              >mdi-clock-outline</v-icon
+              >mdi-chart-line</v-icon
             >
-            <h2 class="text-h4 font-weight-bold text-purple">
-              Pontos Registrados
-            </h2>
+            <h2 class="text-h4 font-weight-bold text-purple">Relatórios</h2>
           </v-card-title>
 
           <v-card-text class="pa-6">
@@ -60,14 +58,15 @@
               <template v-slot:item.horario="{ item }">
                 {{
                   formatarDataHora(
-                    item.horario ||
-                      item.created_at ||
+                    item.created_at ||
+                      item.horario ||
                       item.date ||
                       item.timestamp
                   )
                 }}
               </template>
             </v-data-table>
+            <BackButton route="/" class="mr-3 ma-2" />
           </v-card-text>
         </v-card>
       </v-col>
@@ -98,8 +97,21 @@ const headers = [
 
 const formatarDataHora = (dataHora) => {
   if (!dataHora) return "N/A";
-  const date = new Date(dataHora);
-  if (isNaN(date.getTime())) return "Invalid Date";
+
+  let date;
+  if (typeof dataHora === "string") {
+    date = new Date(dataHora);
+  } else if (dataHora.created_at) {
+    date = new Date(dataHora.created_at);
+  } else {
+    date = new Date(dataHora);
+  }
+
+  if (isNaN(date.getTime())) {
+    console.warn("Invalid date:", dataHora);
+    return "Data inválida";
+  }
+
   return date.toLocaleString("pt-BR", {
     year: "numeric",
     month: "2-digit",
@@ -121,16 +133,15 @@ const filtrarRegistros = async () => {
       params.append("data_fim", filtros.data_fim);
     }
 
-    const response = await api.get(`/time-records?${params}`);
+    const response = await api.get(`/reports/timeclock?${params}`);
     const data = response.data;
     if (data.success) {
       registros.value = data.registros;
-      console.log("Dados recebidos:", data.registros);
     } else {
-      console.error("Error loading time records:", data.message);
+      console.error("Error loading reports:", data.message);
     }
   } catch (error) {
-    console.error("Error loading time records:", error);
+    console.error("Error loading reports:", error);
   } finally {
     loading.value = false;
   }

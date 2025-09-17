@@ -1,13 +1,14 @@
 
 import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
-import Login from '@/pages/login.vue'
+import Login from '@/pages/auth/login.vue'
 import Index from '@/pages/index.vue'
-import Timeclock from '@/pages/timeclock.vue'
-import ChangePassword from '@/pages/change-password.vue'
-import Employees from '@/pages/employees.vue'
-import Reports from '@/pages/reports.vue'
-import TimeRecords from '@/pages/time-records.vue'
+import Timeclock from '@/pages/clock/timeclock.vue'
+import ChangePassword from '@/pages/auth/change-password.vue'
+import Employees from '@/pages/employee/employees.vue'
+import CreateEmployee from '@/pages/employee/create.vue'
+import Reports from '@/pages/report/reports.vue'
+import TimeRecords from '@/pages/clock/time-records.vue'
 import DefaultLayout from '@/layouts/default.vue'
 
 const routes = [
@@ -77,6 +78,13 @@ const routes = [
       {
         path: '',
         component: Employees,
+      },
+      {
+        path: 'create',
+        component: CreateEmployee,
+        meta: {
+          title: 'Novo Funcionário',
+        },
       },
     ],
   },
