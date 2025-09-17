@@ -5,6 +5,8 @@ import Login from '@/pages/login.vue'
 import Index from '@/pages/index.vue'
 import Ponto from '@/pages/ponto.vue'
 import TrocarSenha from '@/pages/trocar-senha.vue'
+import Funcionarios from '@/pages/funcionarios.vue'
+import Relatorios from '@/pages/relatorios.vue'
 import DefaultLayout from '@/layouts/default.vue'
 
 const routes = [
@@ -59,6 +61,21 @@ const routes = [
       {
         path: '',
         component: TrocarSenha
+      }
+    ]
+  },
+  {
+    path: '/funcionarios',
+    name: 'funcionarios',
+    component: DefaultLayout,
+    meta: {
+      requiresAuth: true,
+      title: 'Funcionários'
+    },
+    children: [
+      {
+        path: '',
+        component: Funcionarios
       }
     ]
   },
