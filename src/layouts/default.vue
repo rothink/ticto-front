@@ -17,24 +17,42 @@
       <v-divider></v-divider>
 
       <v-list density="compact" nav>
-        <v-list-item
-          prepend-icon="mdi-home"
-          title="Home"
-          value="home"
-          to="/"
-        ></v-list-item>
+        <template v-if="authStore.user?.role === 'employer'">
+          <v-list-item
+            prepend-icon="mdi-clock-outline"
+            title="Ponto"
+            value="ponto"
+            to="/ponto"
+          ></v-list-item>
 
-        <v-list-item
-          prepend-icon="mdi-account-multiple"
-          title="Usuários"
-          value="users"
-        ></v-list-item>
+          <v-list-item
+            prepend-icon="mdi-key"
+            title="Trocar Senha"
+            value="trocar-senha"
+            to="/trocar-senha"
+          ></v-list-item>
+        </template>
 
-        <v-list-item
-          prepend-icon="mdi-cog"
-          title="Configurações"
-          value="settings"
-        ></v-list-item>
+        <template v-else-if="authStore.user?.role === 'admin'">
+          <v-list-item
+            prepend-icon="mdi-home"
+            title="Home"
+            value="home"
+            to="/"
+          ></v-list-item>
+
+          <v-list-item
+            prepend-icon="mdi-account-multiple"
+            title="Usuários"
+            value="users"
+          ></v-list-item>
+
+          <v-list-item
+            prepend-icon="mdi-cog"
+            title="Configurações"
+            value="settings"
+          ></v-list-item>
+        </template>
       </v-list>
     </v-navigation-drawer>
 

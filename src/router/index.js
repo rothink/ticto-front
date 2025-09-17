@@ -3,6 +3,8 @@ import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import Login from '@/pages/login.vue'
 import Index from '@/pages/index.vue'
+import Ponto from '@/pages/ponto.vue'
+import TrocarSenha from '@/pages/trocar-senha.vue'
 import DefaultLayout from '@/layouts/default.vue'
 
 const routes = [
@@ -31,6 +33,36 @@ const routes = [
     ]
   },
   {
+    path: '/ponto',
+    name: 'ponto',
+    component: DefaultLayout,
+    meta: {
+      requiresAuth: true,
+      title: 'Ponto'
+    },
+    children: [
+      {
+        path: '',
+        component: Ponto
+      }
+    ]
+  },
+  {
+    path: '/trocar-senha',
+    name: 'trocar-senha',
+    component: DefaultLayout,
+    meta: {
+      requiresAuth: true,
+      title: 'Trocar Senha'
+    },
+    children: [
+      {
+        path: '',
+        component: TrocarSenha
+      }
+    ]
+  },
+  {
     path: '/:pathMatch(.*)*',
     name: 'not-found',
     redirect: '/'
@@ -55,7 +87,11 @@ router.beforeEach(async (to, from, next) => {
   }
 
   if (to.meta.requiresGuest && authStore.isLoggedIn) {
-    next('/')
+    if (authStore.user?.role === 'employer') {
+      next('/ponto')
+    } else {
+      next('/')
+    }
     return
   }
 

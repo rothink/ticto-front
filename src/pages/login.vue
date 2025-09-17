@@ -125,7 +125,11 @@ const handleLogin = async () => {
   if (result.success) {
     successMessage.value = result.data.message;
     setTimeout(() => {
-      router.push("/");
+      if (result.data.user.role === 'employer') {
+        router.push("/ponto");
+      } else {
+        router.push("/");
+      }
     }, 1500);
   } else {
     errorMessage.value = result.error;
