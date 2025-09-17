@@ -1,80 +1,267 @@
-# Vuetify (Default)
+# Ticto Frontend - Vue.js + Vuetify
 
-This is the official scaffolding tool for Vuetify, designed to give you a head start in building your new Vuetify application. It sets up a base template with all the necessary configurations and standard directory structure, enabling you to begin development without the hassle of setting up the project from scratch.
+Frontend do sistema de ponto eletrônico desenvolvido com Vue.js 3 e Vuetify 3.
 
-## ❗️ Important Links
+## 📋 Pré-requisitos
 
-- 📄 [Docs](https://vuetifyjs.com/)
-- 🚨 [Issues](https://issues.vuetifyjs.com/)
-- 🏬 [Store](https://store.vuetifyjs.com/)
-- 🎮 [Playground](https://play.vuetifyjs.com/)
-- 💬 [Discord](https://community.vuetifyjs.com)
+- Docker
+- Docker Compose
 
-## 💿 Install
+## 🚀 Como executar o projeto
 
-Set up your project using your preferred package manager. Use the corresponding command to install the dependencies:
-
-| Package Manager                                                | Command        |
-|---------------------------------------------------------------|----------------|
-| [yarn](https://yarnpkg.com/getting-started)                   | `yarn install` |
-| [npm](https://docs.npmjs.com/cli/v7/commands/npm-install)     | `npm install`  |
-| [pnpm](https://pnpm.io/installation)                          | `pnpm install` |
-| [bun](https://bun.sh/#getting-started)                        | `bun install`  |
-
-After completing the installation, your environment is ready for Vuetify development.
-
-## ✨ Features
-
-- 🖼️ **Optimized Front-End Stack**: Leverage the latest Vue 3 and Vuetify 3 for a modern, reactive UI development experience. [Vue 3](https://v3.vuejs.org/) | [Vuetify 3](https://vuetifyjs.com/en/)
-- 🗃️ **State Management**: Integrated with [Pinia](https://pinia.vuejs.org/), the intuitive, modular state management solution for Vue.
-- 🚦 **Routing and Layouts**: Utilizes Vue Router for SPA navigation and vite-plugin-vue-layouts for organizing Vue file layouts. [Vue Router](https://router.vuejs.org/) | [vite-plugin-vue-layouts](https://github.com/JohnCampionJr/vite-plugin-vue-layouts)
-- ⚡ **Next-Gen Tooling**: Powered by Vite, experience fast cold starts and instant HMR (Hot Module Replacement). [Vite](https://vitejs.dev/)
-- 🧩 **Automated Component Importing**: Streamline your workflow with unplugin-vue-components, automatically importing components as you use them. [unplugin-vue-components](https://github.com/antfu/unplugin-vue-components)
-
-These features are curated to provide a seamless development experience from setup to deployment, ensuring that your Vuetify application is both powerful and maintainable.
-
-## 💡 Usage
-
-This section covers how to start the development server and build your project for production.
-
-### Starting the Development Server
-
-To start the development server with hot-reload, run the following command. The server will be accessible at [http://localhost:3000](http://localhost:3000):
+### 1º Passo - Clone do projeto
 
 ```bash
-yarn dev
+git clone https://github.com/rothink/ticto-front
+cd ticto-front
 ```
 
-(Repeat for npm, pnpm, and bun with respective commands.)
+### 2º Passo - Subir os containers
 
-> Add NODE_OPTIONS='--no-warnings' to suppress the JSON import warnings that happen as part of the Vuetify import mapping. If you are on Node [v21.3.0](https://nodejs.org/en/blog/release/v21.3.0) or higher, you can change this to NODE_OPTIONS='--disable-warning=5401'. If you don't mind the warning, you can remove this from your package.json dev script.
-
-### Building for Production
-
-To build your project for production, use:
+Execute o comando para subir o container do frontend:
 
 ```bash
-yarn build
+docker compose up --build -d
 ```
 
-(Repeat for npm, pnpm, and bun with respective commands.)
+Este comando irá:
+- Construir a imagem Docker do frontend
+- Subir o container com Vue.js + Vuetify
+- Configurar o ambiente de desenvolvimento
 
-Once the build process is completed, your application will be ready for deployment in a production environment.
+### 3º Passo - Acessar a aplicação
 
-## 💪 Support Vuetify Development
+Acesse o frontend em: **http://localhost:3000**
 
-This project is built with [Vuetify](https://vuetifyjs.com/en/), a UI Library with a comprehensive collection of Vue components. Vuetify is an MIT licensed Open Source project that has been made possible due to the generous contributions by our [sponsors and backers](https://vuetifyjs.com/introduction/sponsors-and-backers/). If you are interested in supporting this project, please consider:
+## 🛠️ Comandos úteis
 
-- [Requesting Enterprise Support](https://support.vuetifyjs.com/)
-- [Sponsoring John on Github](https://github.com/users/johnleider/sponsorship)
-- [Sponsoring Kael on Github](https://github.com/users/kaelwd/sponsorship)
-- [Supporting the team on Open Collective](https://opencollective.com/vuetify)
-- [Becoming a sponsor on Patreon](https://www.patreon.com/vuetify)
-- [Becoming a subscriber on Tidelift](https://tidelift.com/subscription/npm/vuetify)
-- [Making a one-time donation with Paypal](https://paypal.me/vuetify)
+### Gerenciamento de containers
 
-## 📑 License
-[MIT](http://opensource.org/licenses/MIT)
+```bash
+# Parar os containers
+docker compose down
 
-Copyright (c) 2016-present Vuetify, LLC
-# ticto-front
+# Ver logs dos containers
+docker compose logs -f
+
+# Ver logs específicos do frontend
+docker compose logs -f frontend
+
+# Reiniciar containers
+docker compose restart
+
+# Reconstruir containers
+docker compose up --build -d
+```
+
+### Comandos de desenvolvimento
+
+```bash
+# Acessar o container do frontend
+docker compose exec frontend sh
+
+# Dentro do container, executar comandos npm:
+npm run dev          # Servidor de desenvolvimento
+npm run build        # Build para produção
+npm run preview      # Preview do build
+npm run lint         # Linter
+```
+
+## 🏗️ Estrutura do projeto
+
+```
+front/
+├── src/
+│   ├── components/      # Componentes Vue reutilizáveis
+│   ├── pages/          # Páginas da aplicação
+│   ├── layouts/        # Layouts da aplicação
+│   ├── stores/         # Stores do Pinia
+│   ├── router/         # Configuração do Vue Router
+│   ├── api/           # Configuração da API
+│   ├── helpers/       # Funções auxiliares
+│   ├── plugins/       # Plugins do Vuetify
+│   └── styles/        # Estilos globais
+├── public/            # Arquivos estáticos
+├── Dockerfile         # Configuração Docker
+└── docker-compose.yml # Configuração Docker Compose
+```
+
+## 🔧 Tecnologias utilizadas
+
+- **Vue.js 3** - Framework JavaScript
+- **Vuetify 3** - Framework de componentes Material Design
+- **Pinia** - Gerenciamento de estado
+- **Vue Router** - Roteamento
+- **Axios** - Cliente HTTP
+- **Vite** - Build tool e dev server
+- **Sass** - Pré-processador CSS
+
+## 🎨 Recursos do Vuetify
+
+### Componentes disponíveis:
+- **v-btn** - Botões
+- **v-card** - Cards
+- **v-dialog** - Modais
+- **v-form** - Formulários
+- **v-data-table** - Tabelas
+- **v-navigation-drawer** - Menu lateral
+- **v-app-bar** - Barra superior
+- **v-text-field** - Campos de texto
+- **v-select** - Seletores
+- **v-date-picker** - Seletor de data
+
+### Temas e cores:
+- **Tema roxo** configurado como padrão
+- **Gradiente amarelo para branco** no app
+- **Modo escuro/claro** disponível
+
+## 🔌 Integração com a API
+
+O frontend está configurado para se comunicar com o backend Laravel:
+
+- **URL da API**: http://localhost
+- **Autenticação**: Bearer Token (Laravel Sanctum)
+- **Interceptadores**: Configurados no Axios
+
+### Exemplo de uso da API:
+
+```javascript
+// Em um componente Vue
+import { useApi } from '@/api'
+
+const api = useApi()
+
+// Fazer requisição
+const response = await api.get('/users')
+```
+
+## 🐛 Solução de problemas
+
+### Problemas comuns:
+
+1. **Porta 3000 já em uso**:
+   ```bash
+   # Verificar o que está usando a porta
+   sudo lsof -i :3000
+   # Ou alterar a porta no docker-compose.yml
+   ```
+
+2. **Erro de permissão**:
+   ```bash
+   sudo chown -R $USER:$USER .
+   ```
+
+3. **Container não sobe**:
+   ```bash
+   docker compose down
+   docker compose up --build -d
+   ```
+
+4. **Erro de dependências**:
+   ```bash
+   # Reconstruir o container
+   docker compose down
+   docker compose up --build -d
+   ```
+
+### Logs úteis:
+
+```bash
+# Logs do frontend
+docker compose logs -f frontend
+
+# Logs em tempo real
+docker compose logs -f
+```
+
+## 🧪 Desenvolvimento
+
+### Hot Reload
+O Vite está configurado com Hot Module Replacement (HMR), então as mudanças no código são refletidas automaticamente no navegador.
+
+### Linting
+```bash
+# Executar linter
+docker compose exec frontend npm run lint
+```
+
+### Build para produção
+```bash
+# Build otimizado
+docker compose exec frontend npm run build
+```
+
+## 📱 Responsividade
+
+O frontend é totalmente responsivo e funciona em:
+- **Desktop** (1200px+)
+- **Tablet** (768px - 1199px)
+- **Mobile** (até 767px)
+
+## 🎯 Funcionalidades principais
+
+- **Autenticação** de usuários
+- **Registro de ponto** eletrônico
+- **Dashboard** com estatísticas
+- **Relatórios** de horas trabalhadas
+- **Gerenciamento** de usuários (admin)
+- **Interface** moderna e intuitiva
+
+## 🔐 Autenticação
+
+O sistema utiliza autenticação baseada em tokens:
+
+1. **Login** via API
+2. **Token** armazenado no localStorage
+3. **Interceptadores** automáticos no Axios
+4. **Redirecionamento** automático para login
+
+## 📊 Estado da aplicação
+
+Gerenciamento de estado com **Pinia**:
+
+- **authStore** - Autenticação do usuário
+- **userStore** - Dados do usuário
+- **pontoStore** - Registros de ponto
+- **adminStore** - Funcionalidades administrativas
+
+## 🎨 Personalização
+
+### Cores do tema:
+```scss
+// Cores principais
+$primary: #9C27B0;    // Roxo
+$secondary: #FFC107;  // Amarelo
+$accent: #FF4081;     // Rosa
+```
+
+### Componentes customizados:
+- **confirmDialog** - Para confirmações (biblioteca etcdf-componentes)
+- **Layouts** responsivos
+- **Formulários** com validação
+
+## 📝 Notas importantes
+
+- O frontend está configurado para se comunicar com o backend na porta 80
+- As dependências são instaladas automaticamente no container
+- O Vite está configurado para desenvolvimento otimizado
+- O Vuetify 3 está configurado com todos os componentes disponíveis
+
+## 🚀 Deploy
+
+Para fazer deploy em produção:
+
+```bash
+# Build de produção
+docker compose exec frontend npm run build
+
+# Os arquivos serão gerados na pasta dist/
+```
+
+## 📚 Documentação adicional
+
+- [Vue.js 3](https://vuejs.org/)
+- [Vuetify 3](https://vuetifyjs.com/)
+- [Pinia](https://pinia.vuejs.org/)
+- [Vue Router](https://router.vuejs.org/)
+- [Vite](https://vitejs.dev/)
