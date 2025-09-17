@@ -7,9 +7,7 @@
             <v-icon size="64" color="purple" class="mb-4"
               >mdi-clock-outline</v-icon
             >
-            <h1 class="text-h3 font-weight-bold text-purple">
-              Registro de Ponto
-            </h1>
+            <h1 class="text-h3 font-weight-bold text-purple">Ponto</h1>
           </v-card-title>
 
           <v-card-text class="pa-8 text-center">
@@ -32,7 +30,7 @@
               class="mb-6"
             >
               <v-icon left size="32">mdi-fingerprint</v-icon>
-              Registrar Ponto
+              Clock In/Out
             </v-btn>
 
             <v-alert
@@ -59,7 +57,7 @@
 
             <v-divider class="my-6"></v-divider>
 
-            <h3 class="text-h6 mb-4">Registros de Hoje</h3>
+            <h3 class="text-h6 mb-4">Today's Records</h3>
             <v-list v-if="registrosHoje.length > 0">
               <v-list-item
                 v-for="(registro, index) in registrosHoje"
@@ -69,9 +67,7 @@
                 <template v-slot:prepend>
                   <v-icon color="purple"> mdi-clock-outline </v-icon>
                 </template>
-                <v-list-item-title>
-                  Registro #{{ index + 1 }}
-                </v-list-item-title>
+                <v-list-item-title> Record #{{ index + 1 }} </v-list-item-title>
                 <v-list-item-subtitle>
                   {{ formatarHora(registro.horario) }}
                 </v-list-item-subtitle>
@@ -79,7 +75,7 @@
             </v-list>
             <v-card v-else variant="outlined" class="pa-4">
               <p class="text-body-2 text-medium-emphasis text-center">
-                Nenhum registro encontrado para hoje
+                No records found for today
               </p>
             </v-card>
           </v-card-text>
@@ -92,8 +88,9 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from "vue";
 import { useAuthStore } from "@/stores/auth";
+import api from "@/api";
 
-const authStore = useAuthStore();
+const _authStore = useAuthStore();
 
 const currentTime = ref("");
 const currentDate = ref("");
@@ -124,28 +121,20 @@ const registrarPonto = async () => {
   successMessage.value = "";
 
   try {
-    const response = await fetch("http://localhost/api/ponto", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-        "X-Requested-With": "XMLHttpRequest",
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-      credentials: "include",
-    });
+    const response = await api.post("/ponto");
+    const data = response.data;
 
-    const data = await response.json();
-
-    if (response.ok && data.success) {
+    if (data.success) {
       successMessage.value = data.message;
       carregarRegistrosHoje();
     } else {
-      errorMessage.value = data.message || "Erro ao registrar ponto";
+      errorMessage.value = data.message || "Error clocking in/out";
     }
   } catch (error) {
-    console.error("Erro na requisição:", error);
-    errorMessage.value = "Erro de conexão. Tente novamente.";
+    console.error("Request error:", error);
+    const errorMessage =
+      error.response?.data?.message || "Connection error. Try again.";
+    errorMessage.value = errorMessage;
   } finally {
     loading.value = false;
   }
@@ -153,20 +142,13 @@ const registrarPonto = async () => {
 
 const carregarRegistrosHoje = async () => {
   try {
-    const response = await fetch("http://localhost/api/ponto/hoje", {
-      headers: {
-        Accept: "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-      credentials: "include",
-    });
-
-    const data = await response.json();
-    if (response.ok && data.success) {
+    const response = await api.get("/ponto/hoje");
+    const data = response.data;
+    if (data.success) {
       registrosHoje.value = data.registros;
     }
   } catch (error) {
-    console.error("Erro ao carregar registros:", error);
+    console.error("Error loading records:", error);
   }
 };
 
