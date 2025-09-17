@@ -43,15 +43,11 @@
 
           <v-list-item
             prepend-icon="mdi-account-multiple"
-            title="Usuários"
-            value="users"
+            title="Funcionários"
+            value="funcionarios"
+            to="/funcionarios"
           ></v-list-item>
 
-          <v-list-item
-            prepend-icon="mdi-cog"
-            title="Configurações"
-            value="settings"
-          ></v-list-item>
         </template>
       </v-list>
     </v-navigation-drawer>
