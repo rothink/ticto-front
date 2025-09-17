@@ -5,10 +5,10 @@
         <v-card class="elevation-4" rounded="lg">
           <v-card-title class="pa-6">
             <v-icon size="32" color="purple" class="mr-3"
-              >mdi-chart-line</v-icon
+              >mdi-clock-outline</v-icon
             >
             <h2 class="text-h4 font-weight-bold text-purple">
-              Relatórios de Ponto
+              Pontos Registrados
             </h2>
           </v-card-title>
 
@@ -57,7 +57,7 @@
               :loading="loading"
               class="elevation-1"
             >
-              <template v-slot:item.created_at="{ item }">
+              <template #item.created_at="{ item }">
                 {{ formatarDataHora(item.created_at) }}
               </template>
             </v-data-table>
@@ -151,7 +151,7 @@ const filtrarRegistros = async () => {
     }
 
     const response = await fetch(
-      `http://localhost/api/relatorios/ponto?${params}`,
+      `http://localhost/api/pontos-registrados?${params}`,
       {
         headers: {
           Accept: "application/json",
@@ -165,10 +165,10 @@ const filtrarRegistros = async () => {
     if (response.ok && data.success) {
       registros.value = data.registros;
     } else {
-      console.error("Erro ao carregar relatórios:", data.message);
+      console.error("Erro ao carregar pontos registrados:", data.message);
     }
   } catch (error) {
-    console.error("Erro ao carregar relatórios:", error);
+    console.error("Erro ao carregar pontos registrados:", error);
   } finally {
     loading.value = false;
   }

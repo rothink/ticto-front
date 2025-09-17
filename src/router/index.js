@@ -7,6 +7,7 @@ import Ponto from '@/pages/ponto.vue'
 import TrocarSenha from '@/pages/trocar-senha.vue'
 import Funcionarios from '@/pages/funcionarios.vue'
 import Relatorios from '@/pages/relatorios.vue'
+import PontosRegistrados from '@/pages/pontos-registrados.vue'
 import DefaultLayout from '@/layouts/default.vue'
 
 const routes = [
@@ -91,6 +92,21 @@ const routes = [
       {
         path: '',
         component: Relatorios,
+      },
+    ],
+  },
+  {
+    path: '/pontos-registrados',
+    name: 'pontos-registrados',
+    component: DefaultLayout,
+    meta: {
+      requiresAuth: true,
+      title: 'Pontos Registrados',
+    },
+    children: [
+      {
+        path: '',
+        component: PontosRegistrados,
       },
     ],
   },

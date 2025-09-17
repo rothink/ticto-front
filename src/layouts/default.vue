@@ -55,6 +55,13 @@
             to="/relatorios"
           ></v-list-item>
 
+          <v-list-item
+            prepend-icon="mdi-clock-outline"
+            title="Pontos Registrados"
+            value="pontos-registrados"
+            to="/pontos-registrados"
+          ></v-list-item>
+
         </template>
       </v-list>
     </v-navigation-drawer>
