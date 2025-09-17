@@ -194,7 +194,7 @@ const confirmPasswordRules = [
 const carregarEmployees = async () => {
   loading.value = true;
   try {
-    const response = await api.get("/funcionarios");
+    const response = await api.get("/employees");
     const data = response.data;
     if (data.success) {
       employees.value = data.funcionarios;
@@ -260,8 +260,8 @@ const salvarEmployee = async () => {
   salvando.value = true;
   try {
     const url = isEdit.value
-      ? `/funcionarios/${employeeSelecionado.value.id}`
-      : "/funcionarios";
+      ? `/employees/${employeeSelecionado.value.id}`
+      : "/employees";
 
     const body = isEdit.value
       ? { name: form.name, email: form.email }
@@ -302,7 +302,7 @@ const excluirEmployee = async () => {
   excluindo.value = true;
   try {
     const response = await api.delete(
-      `/funcionarios/${employeeSelecionado.value.id}`
+      `/employees/${employeeSelecionado.value.id}`
     );
     const data = response.data;
     if (data.success) {

@@ -121,7 +121,7 @@ const filtrarRegistros = async () => {
       params.append("data_fim", filtros.data_fim);
     }
 
-    const response = await api.get(`/pontos-registrados?${params}`);
+    const response = await api.get(`/time-records?${params}`);
     const data = response.data;
     if (data.success) {
       registros.value = data.registros;

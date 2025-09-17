@@ -121,7 +121,7 @@ const registrarPonto = async () => {
   successMessage.value = "";
 
   try {
-    const response = await api.post("/ponto");
+    const response = await api.post("/timeclock");
     const data = response.data;
 
     if (data.success) {
@@ -142,7 +142,7 @@ const registrarPonto = async () => {
 
 const carregarRegistrosHoje = async () => {
   try {
-    const response = await api.get("/ponto/hoje");
+    const response = await api.get("/timeclock/today");
     const data = response.data;
     if (data.success) {
       registrosHoje.value = data.registros;

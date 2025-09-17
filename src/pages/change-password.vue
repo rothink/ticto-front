@@ -139,7 +139,7 @@ const handleTrocarSenha = async () => {
   loading.value = true;
 
   try {
-    const response = await api.post("/trocar-senha", {
+    const response = await api.post("/change-password", {
       senha_atual: form.senhaAtual,
       nova_senha: form.novaSenha,
       confirmar_senha: form.confirmarSenha,
