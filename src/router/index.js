@@ -16,8 +16,8 @@ const routes = [
     component: Login,
     meta: {
       requiresGuest: true,
-      title: 'Login'
-    }
+      title: 'Login',
+    },
   },
   {
     path: '/',
@@ -25,14 +25,14 @@ const routes = [
     component: DefaultLayout,
     meta: {
       requiresAuth: true,
-      title: 'Home'
+      title: 'Home',
     },
     children: [
       {
         path: '',
-        component: Index
-      }
-    ]
+        component: Index,
+      },
+    ],
   },
   {
     path: '/ponto',
@@ -40,14 +40,14 @@ const routes = [
     component: DefaultLayout,
     meta: {
       requiresAuth: true,
-      title: 'Ponto'
+      title: 'Ponto',
     },
     children: [
       {
         path: '',
-        component: Ponto
-      }
-    ]
+        component: Ponto,
+      },
+    ],
   },
   {
     path: '/trocar-senha',
@@ -55,14 +55,14 @@ const routes = [
     component: DefaultLayout,
     meta: {
       requiresAuth: true,
-      title: 'Trocar Senha'
+      title: 'Trocar Senha',
     },
     children: [
       {
         path: '',
-        component: TrocarSenha
-      }
-    ]
+        component: TrocarSenha,
+      },
+    ],
   },
   {
     path: '/funcionarios',
@@ -70,20 +70,35 @@ const routes = [
     component: DefaultLayout,
     meta: {
       requiresAuth: true,
-      title: 'Funcionários'
+      title: 'Funcionários',
     },
     children: [
       {
         path: '',
-        component: Funcionarios
-      }
-    ]
+        component: Funcionarios,
+      },
+    ],
+  },
+  {
+    path: '/relatorios',
+    name: 'relatorios',
+    component: DefaultLayout,
+    meta: {
+      requiresAuth: true,
+      title: 'Relatórios',
+    },
+    children: [
+      {
+        path: '',
+        component: Relatorios,
+      },
+    ],
   },
   {
     path: '/:pathMatch(.*)*',
     name: 'not-found',
-    redirect: '/'
-  }
+    redirect: '/',
+  },
 ]
 
 const router = createRouter({

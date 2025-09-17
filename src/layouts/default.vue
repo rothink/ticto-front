@@ -48,6 +48,13 @@
             to="/funcionarios"
           ></v-list-item>
 
+          <v-list-item
+            prepend-icon="mdi-chart-line"
+            title="Relatórios"
+            value="relatorios"
+            to="/relatorios"
+          ></v-list-item>
+
         </template>
       </v-list>
     </v-navigation-drawer>
