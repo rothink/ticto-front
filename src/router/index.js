@@ -1,20 +1,71 @@
-/**
- * router/index.ts
- *
- * Automatic routes for `./src/pages/*.vue`
- */
 
-// Composables
-import { createRouter, createWebHistory } from 'vue-router/auto'
-import { setupLayouts } from 'virtual:generated-layouts'
-import { routes } from 'vue-router/auto-routes'
+import { createRouter, createWebHistory } from 'vue-router'
+import { useAuthStore } from '@/stores/auth'
+import Login from '@/pages/login.vue'
+import Index from '@/pages/index.vue'
+import DefaultLayout from '@/layouts/default.vue'
+
+const routes = [
+  {
+    path: '/login',
+    name: 'login',
+    component: Login,
+    meta: {
+      requiresGuest: true,
+      title: 'Login'
+    }
+  },
+  {
+    path: '/',
+    name: 'home',
+    component: DefaultLayout,
+    meta: {
+      requiresAuth: true,
+      title: 'Home'
+    },
+    children: [
+      {
+        path: '',
+        component: Index
+      }
+    ]
+  },
+  {
+    path: '/:pathMatch(.*)*',
+    name: 'not-found',
+    redirect: '/'
+  }
+]
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
-  routes: setupLayouts(routes),
+  routes,
 })
 
-// Workaround for https://github.com/vitejs/vite/issues/11804
+router.beforeEach(async (to, from, next) => {
+  const authStore = useAuthStore()
+
+  if (!authStore.isAuthenticated && localStorage.getItem('user')) {
+    authStore.initializeAuth()
+  }
+
+  if (to.meta.requiresAuth && !authStore.isLoggedIn) {
+    next('/login')
+    return
+  }
+
+  if (to.meta.requiresGuest && authStore.isLoggedIn) {
+    next('/')
+    return
+  }
+
+  if (to.meta.title) {
+    document.title = `${to.meta.title} - Ticto`
+  }
+
+  next()
+})
+
 router.onError((err, to) => {
   if (err?.message?.includes?.('Failed to fetch dynamically imported module')) {
     if (localStorage.getItem('vuetify:dynamic-reload')) {
