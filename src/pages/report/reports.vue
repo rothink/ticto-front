@@ -15,7 +15,7 @@
               <v-col cols="12" md="3">
                 <v-text-field
                   v-model="filtros.data_inicio"
-                  label="Start Date"
+                  label="Data Início"
                   type="date"
                   variant="outlined"
                 ></v-text-field>
@@ -23,7 +23,7 @@
               <v-col cols="12" md="3">
                 <v-text-field
                   v-model="filtros.data_fim"
-                  label="End Date"
+                  label="Data Fim"
                   type="date"
                   variant="outlined"
                 ></v-text-field>
@@ -35,7 +35,7 @@
                   :loading="loading"
                 >
                   <v-icon left>mdi-magnify</v-icon>
-                  Filter
+                  Filtrar
                 </v-btn>
                 <v-btn
                   color="grey"
@@ -44,7 +44,7 @@
                   :disabled="loading"
                 >
                   <v-icon left>mdi-refresh</v-icon>
-                  Clear
+                  Limpar
                 </v-btn>
               </v-col>
             </v-row>
@@ -89,10 +89,14 @@ const filtros = reactive({
   data_fim: "",
 });
 
+
 const headers = [
-  { title: "ID", key: "id", sortable: true },
-  { title: "Employee", key: "user.name", sortable: true },
-  { title: "Date/Time", key: "horario", sortable: true },
+  { title: "ID", key: "registro_id", sortable: true },
+  { title: "Funcionário", key: "nome_funcionario", sortable: true },
+  { title: "Cargo", key: "cargo", sortable: true },
+  { title: "Idade", key: "idade", sortable: true },
+  { title: "Gestor", key: "nome_gestor", sortable: true },
+  { title: "Data/Hora", key: "data_hora_completa", sortable: true },
 ];
 
 const formatarDataHora = (dataHora) => {
@@ -153,8 +157,25 @@ const limparFiltros = () => {
   filtrarRegistros();
 };
 
+const carregarRelatorios = async () => {
+  loading.value = true;
+  try {
+    const response = await api.get("/reports/timeclock");
+    const data = response.data;
+    if (data.success) {
+      registros.value = data.registros;
+    } else {
+      console.error("Error loading reports:", data.message);
+    }
+  } catch (error) {
+    console.error("Error loading reports:", error);
+  } finally {
+    loading.value = false;
+  }
+};
+
 onMounted(() => {
-  filtrarRegistros();
+  carregarRelatorios();
 });
 </script>
 
