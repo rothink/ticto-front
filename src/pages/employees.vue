@@ -14,14 +14,14 @@
               @click="abrirDialogCriar"
               prepend-icon="mdi-plus"
             >
-              Novo Funcionário
+              New Employee
             </v-btn>
           </v-card-title>
 
           <v-card-text class="pa-6">
             <v-data-table
               :headers="headers"
-              :items="funcionarios"
+              :items="employees"
               :loading="loading"
               class="elevation-1"
             >
@@ -48,16 +48,14 @@
     <v-dialog v-model="dialog" max-width="500px">
       <v-card>
         <v-card-title>
-          <span class="text-h5"
-            >{{ isEdit ? "Editar" : "Novo" }} Funcionário</span
-          >
+          <span class="text-h5">{{ isEdit ? "Edit" : "New" }} Employee</span>
         </v-card-title>
 
         <v-card-text>
           <v-form ref="form" v-model="valid">
             <v-text-field
               v-model="form.name"
-              label="Nome"
+              label="Name"
               :rules="nameRules"
               required
             ></v-text-field>
@@ -72,7 +70,7 @@
             <v-text-field
               v-if="!isEdit"
               v-model="form.password"
-              label="Senha"
+              label="Password"
               type="password"
               :rules="passwordRules"
               required
@@ -81,7 +79,7 @@
             <v-text-field
               v-if="!isEdit"
               v-model="form.password_confirmation"
-              label="Confirmar Senha"
+              label="Confirm Password"
               type="password"
               :rules="confirmPasswordRules"
               required
@@ -92,15 +90,15 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="grey" variant="text" @click="fecharDialog">
-            Cancelar
+            Cancel
           </v-btn>
           <v-btn
             color="purple"
             variant="text"
-            @click="salvarFuncionario"
+            @click="salvarEmployee"
             :loading="salvando"
           >
-            Salvar
+            Save
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -108,24 +106,24 @@
 
     <v-dialog v-model="dialogExclusao" max-width="400px">
       <v-card>
-        <v-card-title class="text-h5">Confirmar Exclusão</v-card-title>
+        <v-card-title class="text-h5">Confirm Deletion</v-card-title>
         <v-card-text>
-          Tem certeza que deseja excluir o funcionário
-          <strong>{{ funcionarioSelecionado?.name }}</strong
+          Are you sure you want to delete the employee
+          <strong>{{ employeeSelecionado?.name }}</strong
           >?
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="grey" variant="text" @click="dialogExclusao = false">
-            Cancelar
+            Cancel
           </v-btn>
           <v-btn
             color="error"
             variant="text"
-            @click="excluirFuncionario"
+            @click="excluirEmployee"
             :loading="excluindo"
           >
-            Excluir
+            Delete
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -140,10 +138,11 @@
 <script setup>
 import { ref, reactive, onMounted, nextTick } from "vue";
 import { useAuthStore } from "@/stores/auth";
+import api from "@/api";
 
-const authStore = useAuthStore();
+const _authStore = useAuthStore();
 
-const funcionarios = ref([]);
+const employees = ref([]);
 const loading = ref(false);
 const dialog = ref(false);
 const dialogExclusao = ref(false);
@@ -151,7 +150,7 @@ const isEdit = ref(false);
 const valid = ref(false);
 const salvando = ref(false);
 const excluindo = ref(false);
-const funcionarioSelecionado = ref(null);
+const employeeSelecionado = ref(null);
 
 const snackbar = ref(false);
 const snackbarText = ref("");
@@ -166,52 +165,45 @@ const form = reactive({
 
 const headers = [
   { title: "ID", key: "id", sortable: true },
-  { title: "Nome", key: "name", sortable: true },
+  { title: "Name", key: "name", sortable: true },
   { title: "E-mail", key: "email", sortable: true },
-  { title: "Criado em", key: "created_at", sortable: true },
-  { title: "Ações", key: "actions", sortable: false },
+  { title: "Created at", key: "created_at", sortable: true },
+  { title: "Actions", key: "actions", sortable: false },
 ];
 
 const nameRules = [
-  (v) => !!v || "Nome é obrigatório",
-  (v) => (v && v.length >= 2) || "Nome deve ter pelo menos 2 caracteres",
+  (v) => !!v || "Name is required",
+  (v) => (v && v.length >= 2) || "Name must have at least 2 characters",
 ];
 
 const emailRules = [
-  (v) => !!v || "E-mail é obrigatório",
-  (v) => /.+@.+\..+/.test(v) || "E-mail deve ser válido",
+  (v) => !!v || "E-mail is required",
+  (v) => /.+@.+\..+/.test(v) || "E-mail must be valid",
 ];
 
 const passwordRules = [
-  (v) => !!v || "Senha é obrigatória",
-  (v) => (v && v.length >= 6) || "Senha deve ter pelo menos 6 caracteres",
+  (v) => !!v || "Password is required",
+  (v) => (v && v.length >= 6) || "Password must have at least 6 characters",
 ];
 
 const confirmPasswordRules = [
-  (v) => !!v || "Confirmação de senha é obrigatória",
-  (v) => v === form.password || "As senhas não coincidem",
+  (v) => !!v || "Password confirmation is required",
+  (v) => v === form.password || "Passwords do not match",
 ];
 
-const carregarFuncionarios = async () => {
+const carregarEmployees = async () => {
   loading.value = true;
   try {
-    const response = await fetch("http://localhost/api/funcionarios", {
-      headers: {
-        Accept: "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-      credentials: "include",
-    });
-
-    const data = await response.json();
-    if (response.ok && data.success) {
-      funcionarios.value = data.funcionarios;
+    const response = await api.get("/employees");
+    const data = response.data;
+    if (data.success) {
+      employees.value = data.funcionarios;
     } else {
-      mostrarSnackbar("Erro ao carregar funcionários", "error");
+      mostrarSnackbar("Error loading employees", "error");
     }
   } catch (error) {
-    console.error("Erro ao carregar funcionários:", error);
-    mostrarSnackbar("Erro de conexão", "error");
+    console.error("Error loading employees:", error);
+    mostrarSnackbar("Connection error", "error");
   } finally {
     loading.value = false;
   }
@@ -223,13 +215,13 @@ const abrirDialogCriar = () => {
   dialog.value = true;
 };
 
-const abrirDialogEditar = async (funcionario) => {
+const abrirDialogEditar = async (employee) => {
   isEdit.value = true;
-  funcionarioSelecionado.value = funcionario;
+  employeeSelecionado.value = employee;
 
   Object.assign(form, {
-    name: funcionario.name,
-    email: funcionario.email,
+    name: employee.name,
+    email: employee.email,
     password: "",
     password_confirmation: "",
   });
@@ -252,14 +244,14 @@ const limparFormulario = () => {
   form.email = "";
   form.password = "";
   form.password_confirmation = "";
-  funcionarioSelecionado.value = null;
+  employeeSelecionado.value = null;
 
   if (form.value) {
     form.value.resetValidation();
   }
 };
 
-const salvarFuncionario = async () => {
+const salvarEmployee = async () => {
   if (!form.value) return;
 
   const { valid: isValid } = await form.value.validate();
@@ -268,10 +260,8 @@ const salvarFuncionario = async () => {
   salvando.value = true;
   try {
     const url = isEdit.value
-      ? `http://localhost/api/funcionarios/${funcionarioSelecionado.value.id}`
-      : "http://localhost/api/funcionarios";
-
-    const method = isEdit.value ? "PUT" : "POST";
+      ? `/employees/${employeeSelecionado.value.id}`
+      : "/employees";
 
     const body = isEdit.value
       ? { name: form.name, email: form.email }
@@ -282,64 +272,50 @@ const salvarFuncionario = async () => {
           password_confirmation: form.password_confirmation,
         };
 
-    const response = await fetch(url, {
-      method,
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-      credentials: "include",
-      body: JSON.stringify(body),
-    });
+    const response = isEdit.value
+      ? await api.put(url, body)
+      : await api.post(url, body);
 
-    const data = await response.json();
-    if (response.ok && data.success) {
+    const data = response.data;
+    if (data.success) {
       mostrarSnackbar(data.message, "success");
       fecharDialog();
-      carregarFuncionarios();
+      carregarEmployees();
     } else {
-      mostrarSnackbar(data.message || "Erro ao salvar funcionário", "error");
+      mostrarSnackbar(data.message || "Error saving employee", "error");
     }
   } catch (error) {
-    console.error("Erro ao salvar funcionário:", error);
-    mostrarSnackbar("Erro de conexão", "error");
+    console.error("Error saving employee:", error);
+    const errorMessage = error.response?.data?.message || "Connection error";
+    mostrarSnackbar(errorMessage, "error");
   } finally {
     salvando.value = false;
   }
 };
 
-const confirmarExclusao = (funcionario) => {
-  funcionarioSelecionado.value = funcionario;
+const confirmarExclusao = (employee) => {
+  employeeSelecionado.value = employee;
   dialogExclusao.value = true;
 };
 
-const excluirFuncionario = async () => {
+const excluirEmployee = async () => {
   excluindo.value = true;
   try {
-    const response = await fetch(
-      `http://localhost/api/funcionarios/${funcionarioSelecionado.value.id}`,
-      {
-        method: "DELETE",
-        headers: {
-          Accept: "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-        credentials: "include",
-      }
+    const response = await api.delete(
+      `/employees/${employeeSelecionado.value.id}`
     );
-
-    const data = await response.json();
-    if (response.ok && data.success) {
+    const data = response.data;
+    if (data.success) {
       mostrarSnackbar(data.message, "success");
       dialogExclusao.value = false;
-      carregarFuncionarios();
+      carregarEmployees();
     } else {
-      mostrarSnackbar(data.message || "Erro ao excluir funcionário", "error");
+      mostrarSnackbar(data.message || "Error deleting employee", "error");
     }
   } catch (error) {
-    console.error("Erro ao excluir funcionário:", error);
-    mostrarSnackbar("Erro de conexão", "error");
+    console.error("Error deleting employee:", error);
+    const errorMessage = error.response?.data?.message || "Connection error";
+    mostrarSnackbar(errorMessage, "error");
   } finally {
     excluindo.value = false;
   }
@@ -352,7 +328,7 @@ const mostrarSnackbar = (text, color) => {
 };
 
 onMounted(() => {
-  carregarFuncionarios();
+  carregarEmployees();
 });
 </script>
 

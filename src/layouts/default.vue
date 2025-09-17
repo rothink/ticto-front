@@ -21,15 +21,15 @@
           <v-list-item
             prepend-icon="mdi-clock-outline"
             title="Ponto"
-            value="ponto"
-            to="/ponto"
+            value="timeclock"
+            to="/timeclock"
           ></v-list-item>
 
           <v-list-item
             prepend-icon="mdi-key"
-            title="Trocar Senha"
-            value="trocar-senha"
-            to="/trocar-senha"
+            title="Alterar Senha"
+            value="change-password"
+            to="/change-password"
           ></v-list-item>
         </template>
 
@@ -44,22 +44,22 @@
           <v-list-item
             prepend-icon="mdi-account-multiple"
             title="Funcionários"
-            value="funcionarios"
-            to="/funcionarios"
+            value="employees"
+            to="/employees"
           ></v-list-item>
 
           <v-list-item
             prepend-icon="mdi-chart-line"
             title="Relatórios"
-            value="relatorios"
-            to="/relatorios"
+            value="reports"
+            to="/reports"
           ></v-list-item>
 
           <v-list-item
             prepend-icon="mdi-clock-outline"
             title="Pontos Registrados"
-            value="pontos-registrados"
-            to="/pontos-registrados"
+            value="time-records"
+            to="/time-records"
           ></v-list-item>
 
         </template>

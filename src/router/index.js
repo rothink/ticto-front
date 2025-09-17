@@ -3,11 +3,11 @@ import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import Login from '@/pages/login.vue'
 import Index from '@/pages/index.vue'
-import Ponto from '@/pages/ponto.vue'
-import TrocarSenha from '@/pages/trocar-senha.vue'
-import Funcionarios from '@/pages/funcionarios.vue'
-import Relatorios from '@/pages/relatorios.vue'
-import PontosRegistrados from '@/pages/pontos-registrados.vue'
+import Timeclock from '@/pages/timeclock.vue'
+import ChangePassword from '@/pages/change-password.vue'
+import Employees from '@/pages/employees.vue'
+import Reports from '@/pages/reports.vue'
+import TimeRecords from '@/pages/time-records.vue'
 import DefaultLayout from '@/layouts/default.vue'
 
 const routes = [
@@ -36,8 +36,8 @@ const routes = [
     ],
   },
   {
-    path: '/ponto',
-    name: 'ponto',
+    path: '/timeclock',
+    name: 'timeclock',
     component: DefaultLayout,
     meta: {
       requiresAuth: true,
@@ -46,28 +46,28 @@ const routes = [
     children: [
       {
         path: '',
-        component: Ponto,
+        component: Timeclock,
       },
     ],
   },
   {
-    path: '/trocar-senha',
-    name: 'trocar-senha',
+    path: '/change-password',
+    name: 'change-password',
     component: DefaultLayout,
     meta: {
       requiresAuth: true,
-      title: 'Trocar Senha',
+      title: 'Alterar Senha',
     },
     children: [
       {
         path: '',
-        component: TrocarSenha,
+        component: ChangePassword,
       },
     ],
   },
   {
-    path: '/funcionarios',
-    name: 'funcionarios',
+    path: '/employees',
+    name: 'employees',
     component: DefaultLayout,
     meta: {
       requiresAuth: true,
@@ -76,13 +76,13 @@ const routes = [
     children: [
       {
         path: '',
-        component: Funcionarios,
+        component: Employees,
       },
     ],
   },
   {
-    path: '/relatorios',
-    name: 'relatorios',
+    path: '/reports',
+    name: 'reports',
     component: DefaultLayout,
     meta: {
       requiresAuth: true,
@@ -91,13 +91,13 @@ const routes = [
     children: [
       {
         path: '',
-        component: Relatorios,
+        component: Reports,
       },
     ],
   },
   {
-    path: '/pontos-registrados',
-    name: 'pontos-registrados',
+    path: '/time-records',
+    name: 'time-records',
     component: DefaultLayout,
     meta: {
       requiresAuth: true,
@@ -106,7 +106,7 @@ const routes = [
     children: [
       {
         path: '',
-        component: PontosRegistrados,
+        component: TimeRecords,
       },
     ],
   },
@@ -136,7 +136,7 @@ router.beforeEach(async (to, from, next) => {
 
   if (to.meta.requiresGuest && authStore.isLoggedIn) {
     if (authStore.user?.role === 'employer') {
-      next('/ponto')
+      next('/timeclock')
     } else {
       next('/')
     }

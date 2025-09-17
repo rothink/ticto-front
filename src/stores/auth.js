@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
+import api from '../api'
 
 export const useAuthStore = defineStore('auth', () => {
   const user = ref(null)
@@ -20,20 +21,10 @@ export const useAuthStore = defineStore('auth', () => {
   const login = async (credentials) => {
     loading.value = true
     try {
-      const response = await fetch('http://localhost/api/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-          'X-Requested-With': 'XMLHttpRequest'
-        },
-        credentials: 'include',
-        body: JSON.stringify(credentials)
-      })
+      const response = await api.post('/login', credentials)
+      const data = response.data
 
-      const data = await response.json()
-
-      if (response.ok && data.success) {
+      if (data.success) {
         setUser(data.user)
         if (data.token) {
           localStorage.setItem('token', data.token)
@@ -44,7 +35,8 @@ export const useAuthStore = defineStore('auth', () => {
       }
     } catch (error) {
       console.error('Erro na requisição de login:', error)
-      return { success: false, error: 'Erro de conexão. Tente novamente.' }
+      const errorMessage = error.response?.data?.message || 'Erro de conexão. Tente novamente.'
+      return { success: false, error: errorMessage }
     } finally {
       loading.value = false
     }
@@ -53,17 +45,7 @@ export const useAuthStore = defineStore('auth', () => {
   const logout = async () => {
     loading.value = true
     try {
-      const token = localStorage.getItem('token')
-      await fetch('http://localhost/api/logout', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-          'X-Requested-With': 'XMLHttpRequest',
-          'Authorization': `Bearer ${token}`
-        },
-        credentials: 'include'
-      })
+      await api.post('/logout')
     } catch (error) {
       console.error('Erro na requisição de logout:', error)
     } finally {
