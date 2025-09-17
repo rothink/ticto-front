@@ -78,6 +78,7 @@
                 No records found for today
               </p>
             </v-card>
+            <BackButton route="/" class="mr-3 ma-2" />
           </v-card-text>
         </v-card>
       </v-col>
@@ -89,6 +90,7 @@
 import { ref, onMounted, onUnmounted } from "vue";
 import { useAuthStore } from "@/stores/auth";
 import api from "@/api";
+import BackButton from "@/components/BackButton.vue";
 
 const _authStore = useAuthStore();
 

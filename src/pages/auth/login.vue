@@ -125,7 +125,7 @@ const handleLogin = async () => {
   if (result.success) {
     successMessage.value = result.data.message;
     setTimeout(() => {
-      if (result.data.user.role === 'employer') {
+      if (result.data.user.role === "employer") {
         router.push("/ponto");
       } else {
         router.push("/");
